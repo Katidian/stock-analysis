@@ -58,7 +58,7 @@ TickerIndex but before creating the three output arrays.
     Dim TickerEndingPrices(TickerIndex) As Single
 ```
 
-But VBA did not like this. When I tested my code by stepping through it using the debugging tool, I got an error about this line:
+VBA did not like this. When I tested my code by stepping through it using the debugging tool, I got an error about this line:
 
 ```
 '1b) Create three output arrays
@@ -66,6 +66,24 @@ But VBA did not like this. When I tested my code by stepping through it using th
     Dim TickerStartingPrices(TickerIndex) As Single
     Dim TickerEndingPrices(TickerIndex) As Single
 ```
+
+![Screenshot of Constant Expression Required error](CompileError.png)
+
+I decided to move forward by typing the number of tickers in parentheses instead of TickerIndex. Fortunately, this made the error go away.
+
+```
+ '1b) Create three output arrays
+    Dim TickerVolumes(12) As Long
+    Dim TickerStartingPrices(12) As Single
+    Dim TickerEndingPrices(12) As Single
+```
+
+There may be a better way of declaring these arrays. To Do: Review this about dynamic arrays: https://www.automateexcel.com/vba/declare-dim-create-initialize-array/ 
+Although maybe dynamic arrays are for something else and you just need to know how many elements are in your array when you declare it. 
+
+But then another error!
+
+![Screenshot of subscript out of range error](
 
 
 It also seems unnecesary to activate the output sheet ("All stocks analysis") twice. The original module code has us activating the output worksheet near the beginning
