@@ -12,14 +12,11 @@ Results of this analysis show that 2017 was a good year for these particular sto
 these stocks posted double- or even triple-digit price increases in 2017. The following year was tough for the most part. Only ENPH and RUN showed price 
 appreciation in 2018, and half the stocks posted double-digit price declines.
 
-![Table showing 2017 stock performance](
+![Table showing 2017 stock performance](Stocks2017.png)         ![Table showing 2018 stock performance](Stocks2018.png)
 
-Other 
-The original code from the module has us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant metrics for 
-that ticker. 
-
-For example, here are the beginning of the For loop and the conditional statement that let us run through each row looking for — and adding up — the total daily volume 
-numbers for each of the 12 tickers in our Tickers array.
+The original VBA module code from the module had us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant 
+metrics for that ticker. For example, below are the beginning of the For loop and the conditional statement that let us run through each row looking for — and adding 
+up — the total daily volume numbers for each of the 12 tickers in our Tickers array.
 
 ```     
 For i = 0 To 11
@@ -36,55 +33,61 @@ For i = 0 To 11
             
       End If
 ```      
-            
-My goal in refactoring the code is to avoid a dozen loops through all the rows of stock price data, which I hope will cut down on the program run time. In order to 
-achieve this, we have to find and store the relevant metrics (total volume, starting price and ending price) for each ticker along the way while only looping 
-through once. 
 
-The purpose of the TickerIndex variable is to tell us which ticker index number we're working with at any given time. I thought that instead of starting with a For 
-loop that loops through each ticker in turn, we need to start with a For loop that loops through all the rows of data.
+Refactoring the code allows us to avoid a dozen loops through all the rows of stock price data, which decreases the program run time from more than 1 second to 
 
-But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point was to reset the TickerVolumes every time we move to a new TickerIndex number. Doing this 
-does not actually run through the data rows 12 times, since it's separate from the For loop that WILL run the data rows.
 
-```
-    For TickerIndex = 0 To 11
-    
-        TickerVolumes(TickerIndex) = 0
-    
-    Next i
+
+In order to achieve this, we have to find and store the relevant metrics (total volume, starting price and ending price) for each ticker along the way while only 
+looping through once. Instead of a For loop that loops through each ticker in turn (as in the original code), we use a For loop that loops through all the rows of 
+data once.
+
+An important tool here is the TickerIndex variable that will tell the computer which ticker index number we're working with at any given time as we loop through
+the data later.
+
+``` 
+    '1a) Create a ticker Index and set it to zero
+    TickerIndex = 0
 ```
 
-Then after playing around with this, I realized that you can just set this For i = 0 to 1, since 
+The TickerIndex will ultimately be used as in the index in the arrays that we create to hold the volume, starting price and ending price variables as we loop
+through the rows of stock performance data (once) and store these metrics for each ticker in our Tickers array.
 
 ```
-  '2a) Create a for loop to initialize the tickerVolumes to zero.
-    
+    '1b) Create three output arrays
+    Dim TickerVolumes(12) As Long
+    Dim TickerStartingPrices(12) As Single
+    Dim TickerEndingPrices(12) As Single
+```
+
+But before we start looping through the stock data, we need to make sure that our TickerVolumes start at zero, as we will later add each stock's cumulative 
+figures for each day. At first I thought we might need to do this 12 times (for i = 0 to 11), but it actually only needs to happen once.
+
+```
     For i = 0 To 1
     
         TickerVolumes(i) = 0
     
     Next i
-```
-
-I assumed we still needed the separate Ticker variable, so I set it right after creating the TickerIndex but before creating the three output arrays. It turns 
-out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
 
 ```
-    '1a) Create a ticker Index
-    'and set it to zero
-    TickerIndex = 0
+
+Then we start looping! For example, below is the part of the For loop that loops through the stock data and adds up the daily volume figures for each
+stock. It uses the TickerIndex to keep track of which stock it is on.
+
+```
+    '2b) Loop over all the rows in the spreadsheet.
+    For i = 2 To RowCount
     
-    'I think we need to set the Ticker variable, too.
-    Ticker = Tickers(TickerIndex)
-
-    '1b) Create three output arrays
-    Dim TickerVolumes(TickerIndex) As Long
-    Dim TickerStartingPrices(TickerIndex) As Single
-    Dim TickerEndingPrices(TickerIndex) As Single
+        '3a) Increase volume for current ticker
+        TickerVolumes(TickerIndex) = TickerVolumes(TickerIndex) + Cells(i, 8).Value
 ```
 
-VBA did not like this. When I tested my code by stepping through it using the debugging tool, I got an error about this line:
+I had assumed we still needed the separate Ticker variable from the original module code, so I set it right after creating the TickerIndex but before creating 
+the three output arrays. It turns out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
+
+My first big problem in refactoring this code was figuring out why we needed separate For loops to initialize the TickerVolumes to zero and how to make that 
+happen. After puzzling through that, my main problems largely stemmed from trying to use TickerIndex in places where it had no business being. For example, VBA did not like this:
 
 ```
 '1b) Create three output arrays
@@ -95,7 +98,10 @@ VBA did not like this. When I tested my code by stepping through it using the de
 
 ![Screenshot of Constant Expression Required error](CompileError.png)
 
-I decided to move forward by typing the number of tickers in parentheses instead of TickerIndex. Fortunately, this made the error go away.
+Typing the number of tickers (12) in parentheses instead of TickerIndex made the error go away. I was trying to create a dynamic array (probably the wrong way)
+when what I really needed to do was enter the number of elements in each array. This resource about dynamic arrays is going on my reading list: 
+
+https://www.automateexcel.com/vba/declare-dim-create-initialize-array/ 
 
 ```
  '1b) Create three output arrays
@@ -104,24 +110,23 @@ I decided to move forward by typing the number of tickers in parentheses instead
     Dim TickerEndingPrices(12) As Single
 ```
 
-There may be a better way of declaring these arrays. To Do: Review this about dynamic arrays: https://www.automateexcel.com/vba/declare-dim-create-initialize-array/ 
-Although maybe dynamic arrays are for something else and you just need to know how many elements are in your array when you declare it. 
-
-But then another error! This time about the line of code in which I increase the volume for current ticker:
+I also mistakenly tried to use TickerIndex instead of i in the below For loop. This kicked up another error. Fixing it helped me better understand what 
+exactly we're doing in a For loop and what the actual purpose of the TickerIndex variable is.
 
 ```
-''2b) Loop over all the rows in the spreadsheet.
-    For i = 2 To RowCount
-    
-        '3a) Increase volume for current ticker
-        TickerVolumes(TickerIndex) = TickerVolumes(TickerIndex) + Cells(i, 8).Value
+'4) Loop through your arrays to output the Ticker, Total Daily Volume, and Return.
+    For i = 0 To 11
+
+        Worksheets("All Stocks Analysis").Activate
+        
+         
+        Cells(4 + i, 1).Value = Tickers(i)
+        Cells(4 + i, 2).Value = TickerVolumes(i)
+        Cells(4 + i, 3).Value = TickerEndingPrices(i) / TickerStartingPrices(i) - 1
+
+
+    Next i
 ```
-
-
-![Screenshot of subscript out of range error](RuntimeError.png)
-
-I kept trying to use TickerIndex in places where I just needed to use i.
-Overflow error https://excelchamps.com/vba/overflow-error-6/
 
 
 It also seems unnecesary to activate the output sheet ("All stocks analysis") twice. The original module code has us activating the output worksheet near the beginning
