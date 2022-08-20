@@ -12,6 +12,8 @@ Results of this analysis show that 2017 was a good year for these particular sto
 these stocks posted double- or even triple-digit price increases in 2017. The following year was tough for the most part. Only ENPH and RUN showed price 
 appreciation in 2018, and half the stocks posted double-digit price declines.
 
+![Table showing 2017 stock performance](
+
 Other 
 The original code from the module has us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant metrics for 
 that ticker. 
