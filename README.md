@@ -89,14 +89,15 @@ stock. It uses the TickerIndex to keep track of which stock it is on.
 Refactoring our code made it run much more quickly and smoothly. I do not find the new code much easier to read, but it presumably places less strain
 on one's computer. 
 
-One challenge for me in refactoring this code was pushing myself to the next level of abstraction required to understand how to work with arrays. I also kept
-trying to use certain variables in places where they were useless (or worse than useless).
+One challenge in refactoring is the need to grasp higher levels of data abstraction. For example, arrays are very powerful, but they are more complicated to 
+understand than individual variables. This project found me frequently trying to use certain variables in places where they were useless (or worse than useless).
 
-For example, I had assumed we still needed the separate Ticker variable from the original module code, so I set it right after creating the TickerIndex but before 
+I had assumed we still needed the separate Ticker variable from the original module code, so I set it right after creating the TickerIndex but before 
 creating the three output arrays. It turns out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
 
 My first big problem in refactoring this code was figuring out why we needed separate For loops to initialize the TickerVolumes to zero and how to make that 
-happen. After puzzling through that, my main problems largely stemmed from trying to use TickerIndex in places where it had no business being. For example, VBA did not like this:
+happen. After puzzling through that, my main problems largely stemmed from trying to use TickerIndex in places where it did not elong. For example, VBA did not 
+like this:
 
 ```
 '1b) Create three output arrays
@@ -107,8 +108,8 @@ happen. After puzzling through that, my main problems largely stemmed from tryin
 
 ![Screenshot of Constant Expression Required error](CompileError.png)
 
-Typing the number of tickers (12) in parentheses instead of TickerIndex made the error go away. I was trying to create a dynamic array (probably the wrong way)
-when what I really needed to do was enter the number of elements in each array. This resource about dynamic arrays is going on my reading list: 
+Typing the number of tickers (12) in parentheses instead of TickerIndex made the error go away. I was incorrectly trying to create a dynamic array when what I 
+really needed to do was enter the number of elements in each array. This resource about dynamic arrays may be helpful for the future: 
 
 https://www.automateexcel.com/vba/declare-dim-create-initialize-array/ 
 
@@ -119,8 +120,7 @@ https://www.automateexcel.com/vba/declare-dim-create-initialize-array/
     Dim TickerEndingPrices(12) As Single
 ```
 
-I also mistakenly tried to use TickerIndex instead of i in the below For loop. This kicked up another error. Fixing it helped me better understand what 
-exactly we're doing in a For loop and what the actual purpose of the TickerIndex variable is.
+I also mistakenly tried to use TickerIndex instead of i in the below For loop. Fixing the resulting bug helped me better understand what exactly we're doing in a For loop and what the actual purpose of the TickerIndex variable is.
 
 ```
 '4) Loop through your arrays to output the Ticker, Total Daily Volume, and Return.
