@@ -1,6 +1,18 @@
-# stock-analysis
-Analysis for boot camp VBA module
+# Analyzing stocks with VBA
 
+## Overview of Project
+This project uses VBA to show key market performance metrics for a basket of 12 stocks in 2017 and 2018. 
+
+We begin with two Excel worksheets that contain daily pricing and volume data for these stocks in each year. Our VBA macro pulls from that data to display (on 
+another sheet) the total daily volume and price change for each stock in a year chosen by the user. The user can run the macro from the output sheet by clicking a 
+button that asks them to input the year of their choice. This works as long as data for their chosen year is available in the workbook (2017 or 2018 in this case).
+
+## Results
+Results of this analysis show that 2017 was a good year for these particular stocks, with all but TERP seeing price appreciation during the year. Three-quarters of
+these stocks posted double- or even triple-digit price increases in 2017. The following year was tough for the most part. Only ENPH and RUN showed price 
+appreciation in 2018, and half the stocks posted double-digit price declines.
+
+Other 
 The original code from the module has us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant metrics for 
 that ticker. 
 
@@ -30,13 +42,25 @@ through once.
 The purpose of the TickerIndex variable is to tell us which ticker index number we're working with at any given time. I thought that instead of starting with a For 
 loop that loops through each ticker in turn, we need to start with a For loop that loops through all the rows of data.
 
-But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point is to reset the TickerVolumes every time we move to a new TickerIndex number. Doing this 
+But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point was to reset the TickerVolumes every time we move to a new TickerIndex number. Doing this 
 does not actually run through the data rows 12 times, since it's separate from the For loop that WILL run the data rows.
 
 ```
     For TickerIndex = 0 To 11
     
         TickerVolumes(TickerIndex) = 0
+    
+    Next i
+```
+
+Then after playing around with this, I realized that you can just set this For i = 0 to 1, since 
+
+```
+  '2a) Create a for loop to initialize the tickerVolumes to zero.
+    
+    For i = 0 To 1
+    
+        TickerVolumes(i) = 0
     
     Next i
 ```
