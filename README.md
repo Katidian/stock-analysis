@@ -30,7 +30,8 @@ through once.
 The purpose of the TickerIndex variable is to tell us which ticker index number we're working with at any given time. I thought that instead of starting with a For 
 loop that loops through each ticker in turn, we need to start with a For loop that loops through all the rows of data.
 
-But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point is to reset the TickerVolumes every time we move to a new TickerIndex number.
+But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point is to reset the TickerVolumes every time we move to a new TickerIndex number. Doing this 
+does not actually run through the data rows 12 times, since it's separate from the For loop that WILL run the data rows.
 
 ```
     For TickerIndex = 0 To 11
@@ -52,6 +53,15 @@ TickerIndex but before creating the three output arrays.
     Ticker = Tickers(TickerIndex)
 
     '1b) Create three output arrays
+    Dim TickerVolumes(TickerIndex) As Long
+    Dim TickerStartingPrices(TickerIndex) As Single
+    Dim TickerEndingPrices(TickerIndex) As Single
+```
+
+But VBA did not like this. When I tested my code by stepping through it using the debugging tool, I got an error about this line:
+
+```
+'1b) Create three output arrays
     Dim TickerVolumes(TickerIndex) As Long
     Dim TickerStartingPrices(TickerIndex) As Single
     Dim TickerEndingPrices(TickerIndex) As Single
