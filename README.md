@@ -14,9 +14,9 @@ appreciation in 2018, and half the stocks posted double-digit price declines.
 
 ![Table showing 2017 stock performance](Stocks2017.png)         ![Table showing 2018 stock performance](Stocks2018.png)
 
-The original VBA module code from the module had us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant 
-metrics for that ticker. For example, below are the beginning of the For loop and the conditional statement that let us run through each row looking for — and adding 
-up — the total daily volume numbers for each of the 12 tickers in our Tickers array.
+The original VBA module code had us looping through all the rows of stock price data 12 times — once for each ticker — each time finding the relevant 
+metrics for that ticker. For example, below are the beginning of the original For loop and the conditional statement that let us run through each row looking 
+for — and adding up — the total daily volume numbers for each of the 12 tickers in our Tickers array.
 
 ```     
 For i = 0 To 11
@@ -34,9 +34,10 @@ For i = 0 To 11
       End If
 ```      
 
-Refactoring the code allows us to avoid a dozen loops through all the rows of stock price data, which decreases the program run time from more than 1 second to 
+Refactoring the code allows us to avoid many loops through all the rows of stock price data, which decreases the program run time from more than 1 second to
+less than 0.2 second.
 
-
+![Screenshot of 2018 run time for original module code](VBA_Challenge_2017.png)      ![Screenshot of 2018 run time for original module code](VBA_Challenge_2018.png)
 
 In order to achieve this, we have to find and store the relevant metrics (total volume, starting price and ending price) for each ticker along the way while only 
 looping through once. Instead of a For loop that loops through each ticker in turn (as in the original code), we use a For loop that loops through all the rows of 
@@ -50,8 +51,8 @@ the data later.
     TickerIndex = 0
 ```
 
-The TickerIndex will ultimately be used as in the index in the arrays that we create to hold the volume, starting price and ending price variables as we loop
-through the rows of stock performance data (once) and store these metrics for each ticker in our Tickers array.
+The TickerIndex will ultimately be used as the index in the arrays that we create to hold the volume, starting price and ending price variables as we loop
+through the rows of stock performance data (once) and store these metrics for each ticker.
 
 ```
     '1b) Create three output arrays
@@ -83,8 +84,16 @@ stock. It uses the TickerIndex to keep track of which stock it is on.
         TickerVolumes(TickerIndex) = TickerVolumes(TickerIndex) + Cells(i, 8).Value
 ```
 
-I had assumed we still needed the separate Ticker variable from the original module code, so I set it right after creating the TickerIndex but before creating 
-the three output arrays. It turns out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
+
+## Summary
+Refactoring our code made it run much more quickly and smoothly. I do not find the new code much easier to read, but it presumably places less strain
+on one's computer. 
+
+One challenge for me in refactoring this code was pushing myself to the next level of abstraction required to understand how to work with arrays. I also kept
+trying to use certain variables in places where they were useless (or worse than useless).
+
+For example, I had assumed we still needed the separate Ticker variable from the original module code, so I set it right after creating the TickerIndex but before 
+creating the three output arrays. It turns out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
 
 My first big problem in refactoring this code was figuring out why we needed separate For loops to initialize the TickerVolumes to zero and how to make that 
 happen. After puzzling through that, my main problems largely stemmed from trying to use TickerIndex in places where it had no business being. For example, VBA did not like this:
@@ -127,38 +136,3 @@ exactly we're doing in a For loop and what the actual purpose of the TickerIndex
 
     Next i
 ```
-
-
-It also seems unnecesary to activate the output sheet ("All stocks analysis") twice. The original module code has us activating the output worksheet near the beginning
-of the subroutine in order to set up data headers. 
-
-```
-Sub AllStocksAnalysis()
-
-    Dim startTime As Single
-    Dim endTime As Single
-
-    yearValue = InputBox("For which year would you like to analyze stock performance?")
-
-    startTime = Timer
-
-    'Format the output sheet on the "All stocks analysis" worksheet.
-    Worksheets("All stocks analysis").Activate
-        
-    Range("A1").Value = "All stocks (" + yearValue + ")"
-            
-    'Set up the data headers
-    Cells(3, 1).Value = "Ticker"
-    Cells(3, 2).Value = "Total daily volume"
-    Cells(3, 3).Value = "Return"
-```
-
-Then we activate the sheet containing the stock price data ("2017" or "2018", depending on the user's choice of year for analysis) and run through the various
-For loops and conditional statements that gather and store the appropriate data. As part of the outer For loop that runs through each ticker, we re-activate the 
-output sheet and populate it with the data gathered from the previous sheet for each ticker. 
-
-I would like to see if adding the column headers to the output sheet while we already have it activated during the data population process makes the code less 
-bulky and/or speeds up the run time.
-
-```
-
