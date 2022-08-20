@@ -81,9 +81,21 @@ I decided to move forward by typing the number of tickers in parentheses instead
 There may be a better way of declaring these arrays. To Do: Review this about dynamic arrays: https://www.automateexcel.com/vba/declare-dim-create-initialize-array/ 
 Although maybe dynamic arrays are for something else and you just need to know how many elements are in your array when you declare it. 
 
-But then another error!
+But then another error! This time about the line of code in which I increase the volume for current ticker:
 
-![Screenshot of subscript out of range error](
+```
+''2b) Loop over all the rows in the spreadsheet.
+    For i = 2 To RowCount
+    
+        '3a) Increase volume for current ticker
+        TickerVolumes(TickerIndex) = TickerVolumes(TickerIndex) + Cells(i, 8).Value
+```
+
+
+![Screenshot of subscript out of range error](RuntimeError.png)
+
+I kept trying to use TickerIndex in places where I just needed to use i.
+Overflow error https://excelchamps.com/vba/overflow-error-6/
 
 
 It also seems unnecesary to activate the output sheet ("All stocks analysis") twice. The original module code has us activating the output worksheet near the beginning
