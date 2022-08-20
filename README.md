@@ -27,6 +27,37 @@ My goal in refactoring the code is to avoid a dozen loops through all the rows o
 achieve this, we have to find and store the relevant metrics (total volume, starting price and ending price) for each ticker along the way while only looping 
 through once. 
 
+The purpose of the TickerIndex variable is to tell us which ticker index number we're working with at any given time. I thought that instead of starting with a For 
+loop that loops through each ticker in turn, we need to start with a For loop that loops through all the rows of data.
+
+But then I got stuck on instruction 2a ("Create a for loop to initialize the TickerVolumes to zero") because I wasn't quite sure what I should be looping through. After thinking about this for way too long, I decided that the point is to reset the TickerVolumes every time we move to a new TickerIndex number.
+
+```
+    For TickerIndex = 0 To 11
+    
+        TickerVolumes(TickerIndex) = 0
+    
+    Next i
+```
+
+The instructions for the challenge did not specify where to set the Ticker variable, but I assume we still need it, so I set it right after creating the 
+TickerIndex but before creating the three output arrays.
+
+```
+    '1a) Create a ticker Index
+    'and set it to zero
+    TickerIndex = 0
+    
+    'I think we need to set the Ticker variable, too.
+    Ticker = Tickers(TickerIndex)
+
+    '1b) Create three output arrays
+    Dim TickerVolumes(TickerIndex) As Long
+    Dim TickerStartingPrices(TickerIndex) As Single
+    Dim TickerEndingPrices(TickerIndex) As Single
+```
+
+
 It also seems unnecesary to activate the output sheet ("All stocks analysis") twice. The original module code has us activating the output worksheet near the beginning
 of the subroutine in order to set up data headers. 
 
