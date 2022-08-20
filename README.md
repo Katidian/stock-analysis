@@ -3,6 +3,8 @@
 ## Overview of Project
 This project uses VBA to show key market performance metrics for a basket of 12 stocks in 2017 and 2018. 
 
+The Excel file is available [here](VBA_challenge.xlsm).
+
 We begin with two Excel worksheets that contain daily pricing and volume data for these stocks in each year. Our VBA macro pulls from that data to display (on 
 another sheet) the total daily volume and price change for each stock in a year chosen by the user. The user can run the macro from the output sheet by clicking a 
 button that asks them to input the year of their choice. This works as long as data for their chosen year is available in the workbook (2017 or 2018 in this case).
