@@ -41,8 +41,8 @@ does not actually run through the data rows 12 times, since it's separate from t
     Next i
 ```
 
-The instructions for the challenge did not specify where to set the Ticker variable, but I assume we still need it, so I set it right after creating the 
-TickerIndex but before creating the three output arrays.
+I assumed we still needed the separate Ticker variable, so I set it right after creating the TickerIndex but before creating the three output arrays. It turns 
+out we don't need it since the TickerIndex variable is selecting the ticker symbols from the Tickers array for us.
 
 ```
     '1a) Create a ticker Index
